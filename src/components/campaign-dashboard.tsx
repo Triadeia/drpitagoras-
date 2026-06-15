@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import {
   Activity,
   AlertTriangle,
@@ -94,7 +95,7 @@ function DashboardView() {
               <div className="eyebrow light"><Sparkles size={14} /> Receita Certa 2026</div>
               <h2>A Bahia é de quem<br /><em>constrói o interior.</em></h2>
               <p>O painel transforma estratégia política em cadência operacional, sem perder a prova, o território e o cuidado.</p>
-              <button className="primary-button">Abrir plano de 90 dias <ArrowRight size={17} /></button>
+              <Link className="primary-button" href="/documento">Ler documento completo <ArrowRight size={17} /></Link>
             </div>
             <div className="hero-signal" aria-label="Progresso da campanha">
               <svg viewBox="0 0 120 120" role="img">
@@ -337,6 +338,7 @@ export function CampaignDashboard() {
         <nav>
           <span className="nav-label">NAVEGAÇÃO</span>
           {navigation.map((item) => <button key={item.id} className={view === item.id ? "active" : ""} onClick={() => { setView(item.id); setMenuOpen(false); }}><item.icon size={18} /><span>{item.label}</span>{view === item.id && <ChevronRight className="nav-arrow" size={15} />}</button>)}
+          <Link className="document-link" href="/documento"><FileText size={18} /><span>Documento completo</span><ArrowRight className="nav-arrow" size={15} /></Link>
         </nav>
         <div className="sidebar-footer">
           <div className="status-line"><CircleDot size={14} /><span>Ambiente estratégico</span></div>
