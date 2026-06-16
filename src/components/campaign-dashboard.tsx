@@ -566,6 +566,7 @@ export function CampaignDashboard() {
         <nav>
           <span className="nav-label">NAVEGAÇÃO</span>
           {navigation.map((item) => <button key={item.id} className={view === item.id ? "active" : ""} onClick={() => { setView(item.id); setMenuOpen(false); }}><item.icon size={18} /><span>{item.label}</span>{view === item.id && <ChevronRight className="nav-arrow" size={15} />}</button>)}
+          <Link className="document-link" href="/app/marca"><BookOpenCheck size={18} /><span>Brandbook completo</span><ArrowRight className="nav-arrow" size={15} /></Link>
           <Link className="document-link" href="/documento"><FileText size={18} /><span>Documento completo</span><ArrowRight className="nav-arrow" size={15} /></Link>
         </nav>
         <div className="sidebar-footer">
