@@ -48,3 +48,41 @@ export const doctrines = [
   ["DOC-008", "8 anos. 84%. Candeias mudou."],
 ];
 
+export const leaderProfile = {
+  name: "Joao Gabriel",
+  role: "Lider da Campanha",
+  email: "lider@drpitagoras.com.br",
+  phone: "(71) 99246-4840",
+  city: "Candeias",
+  neighborhood: "Nova Candeias",
+  inviteUrl: "https://dr-pitagoras.vercel.app/cadastro/joao-gabriel",
+  points: 186,
+  level: "Mobilizador Prata",
+  loginHint: "lider@drpitagoras.com.br",
+  passwordHint: "pitagoras2026",
+};
+
+export const supporters = [
+  { name: "Maria Clara Santos", phone: "(71) 98814-2210", neighborhood: "Centro", city: "Candeias", status: "Confirmado", points: 34, tags: ["Saude", "Familia"] },
+  { name: "Rafael Oliveira", phone: "(71) 98120-3378", neighborhood: "Malemba", city: "Candeias", status: "Contato quente", points: 21, tags: ["Juventude"] },
+  { name: "Ana Paula Reis", phone: "(71) 99744-9031", neighborhood: "Urucara", city: "Candeias", status: "Visita marcada", points: 18, tags: ["Educacao"] },
+  { name: "Carlos Henrique", phone: "(71) 98602-1198", neighborhood: "Santo Antonio", city: "Candeias", status: "Novo cadastro", points: 12, tags: ["Comercio"] },
+  { name: "Juliana Ferreira", phone: "(71) 99935-6450", neighborhood: "Sarandi", city: "Candeias", status: "Observacao", points: 9, tags: ["Comunidade"] },
+];
+
+export const leaderGoals = [
+  { title: "Cadastrar 25 apoiadores", progress: 20, current: 5, target: 25, reward: 80 },
+  { title: "Realizar 3 check-ins de rua", progress: 33, current: 1, target: 3, reward: 45 },
+  { title: "Mapear 5 liderancas locais", progress: 40, current: 2, target: 5, reward: 60 },
+];
+
+export const leaderActivities = [
+  { type: "Cadastro", text: "Maria Clara entrou na rede pelo convite", time: "Hoje, 09:12", points: 12 },
+  { type: "Check-in", text: "Visita registrada no bairro Malemba", time: "Ontem, 17:40", points: 18 },
+  { type: "Meta", text: "Primeiro grupo de apoiadores iniciado", time: "15 jun, 20:06", points: 25 },
+];
+
+export const leaderAnnouncements = [
+  { title: "Nova narrativa em campo", text: "Novo movimento, nova narrativa: foco em resultado verificavel e cuidado com o interior.", priority: "Alta" },
+  { title: "Prova antes de promessa", text: "Todo material com numeros deve citar fonte e responsavel pela validacao.", priority: "Operacional" },
+];

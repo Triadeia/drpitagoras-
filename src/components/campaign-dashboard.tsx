@@ -13,19 +13,34 @@ import {
   Check,
   ChevronRight,
   CircleDot,
+  ClipboardList,
+  Copy,
   FileCheck2,
   FileText,
+  Flag,
   Gauge,
+  Hand,
   LayoutDashboard,
+  Link as LinkIcon,
+  Lock,
+  LogOut,
   Map,
+  MapPin,
   Menu,
   Megaphone,
+  MessageSquare,
   MessageCircleMore,
+  Phone,
   Play,
   Search,
   ShieldCheck,
   Sparkles,
+  Star,
   Target,
+  Trophy,
+  Upload,
+  UserCircle,
+  UserPlus,
   Users,
   X,
 } from "lucide-react";
@@ -33,16 +48,27 @@ import { useMemo, useState } from "react";
 import {
   contentItems,
   doctrines,
+  leaderActivities,
+  leaderAnnouncements,
+  leaderGoals,
+  leaderProfile,
   phases,
   priorities,
   proofPoints,
+  supporters,
   territories,
 } from "@/lib/campaign-data";
 
-type View = "dashboard" | "movimento" | "conteudo" | "territorio" | "provas" | "operacao" | "inteligencia";
+type View = "dashboard" | "lideranca" | "rede" | "checkin" | "metas" | "mural" | "cadastro" | "movimento" | "conteudo" | "territorio" | "provas" | "operacao" | "inteligencia";
 
 const navigation: Array<{ id: View; label: string; icon: typeof Gauge }> = [
   { id: "dashboard", label: "Visão geral", icon: LayoutDashboard },
+  { id: "lideranca", label: "Área do líder", icon: Users },
+  { id: "rede", label: "Minha rede", icon: UserPlus },
+  { id: "checkin", label: "Check-in", icon: MapPin },
+  { id: "metas", label: "Metas", icon: Flag },
+  { id: "mural", label: "Mural", icon: MessageSquare },
+  { id: "cadastro", label: "Login e cadastro", icon: Lock },
   { id: "movimento", label: "Movimento", icon: Megaphone },
   { id: "conteudo", label: "Conteúdo", icon: Play },
   { id: "territorio", label: "Território", icon: Map },
@@ -53,6 +79,12 @@ const navigation: Array<{ id: View; label: string; icon: typeof Gauge }> = [
 
 const viewTitles: Record<View, [string, string]> = {
   dashboard: ["Comando da campanha", "Decisões, riscos e prioridades do movimento em um só lugar."],
+  lideranca: ["Painel do líder", "Entrada mínima para liderança, rede, metas, pontos e cadência de rua."],
+  rede: ["Minha rede", "Cinco eleitores demonstrativos para testar cadastro, busca e acompanhamento."],
+  checkin: ["Check-in diário", "Registro rápido de presença territorial, visita, reunião e ação local."],
+  metas: ["Gamificação e metas", "Missões, pontos e progresso para manter liderança em movimento."],
+  mural: ["Mural de avisos", "Comunicados curtos para alinhar narrativa, prova e operação."],
+  cadastro: ["Login e cadastro", "Fluxo inicial para líderes e novos apoiadores entrarem vinculados à campanha."],
   movimento: ["Arquitetura do movimento", "Tese, doutrinas, personas e ciclos da Receita Certa."],
   conteudo: ["Central de conteúdo", "Do roteiro à publicação, com coerência ideológica e fonte."],
   territorio: ["Expansão territorial", "Força local, lideranças e próximos núcleos de mobilização."],
@@ -155,6 +187,196 @@ function DashboardView() {
         </div>
       </section>
     </>
+  );
+}
+
+function LeaderOverviewView() {
+  const completedGoals = leaderGoals.filter((goal) => goal.progress >= 100).length;
+  return (
+    <>
+      <section className="leader-hero">
+        <div className="leader-id">
+          <div className="leader-avatar">JG</div>
+          <div>
+            <span>Area do Lider</span>
+            <h2>{leaderProfile.name}</h2>
+            <p>{leaderProfile.level} em {leaderProfile.city}</p>
+          </div>
+        </div>
+        <div className="leader-points">
+          <Star size={20} />
+          <strong>{leaderProfile.points}</strong>
+          <span>pontos</span>
+        </div>
+        <button className="secondary-button"><LogOut size={16} /> Sair</button>
+      </section>
+
+      <section className="invite-band">
+        <div><LinkIcon size={22} /><div><strong>Link de cadastro de apoiadores</strong><span>Compartilhe para vincular novos eleitores automaticamente.</span></div></div>
+        <code>{leaderProfile.inviteUrl}</code>
+        <button className="copy-button"><Copy size={16} /> Copiar</button>
+      </section>
+
+      <section className="metric-grid">
+        <MetricCard icon={Users} label="Apoiadores" value={String(supporters.length)} note="5 exemplos pre-carregados" tone="green" />
+        <MetricCard icon={Trophy} label="Metas concluidas" value={String(completedGoals)} note={`${leaderGoals.length} missoes ativas`} tone="orange" />
+        <MetricCard icon={Flag} label="Metas em andamento" value={String(leaderGoals.length)} note="Cadencia semanal" />
+        <MetricCard icon={BarChart3} label="Taxa de conclusao" value="31%" note="Progresso medio das missoes" tone="slate" />
+      </section>
+
+      <section className="dashboard-grid">
+        <article className="panel">
+          <div className="panel-heading"><div><span className="section-kicker">REDE</span><h3>Eleitores recentes</h3></div><Pill tone="green">Pronto para Supabase</Pill></div>
+          <div className="supporter-list">
+            {supporters.slice(0, 5).map((supporter) => (
+              <div className="supporter-row" key={supporter.phone}>
+                <div className="mini-avatar">{supporter.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}</div>
+                <div><strong>{supporter.name}</strong><span>{supporter.neighborhood} · {supporter.phone}</span></div>
+                <Pill tone={supporter.status === "Confirmado" ? "green" : "blue"}>{supporter.status}</Pill>
+              </div>
+            ))}
+          </div>
+        </article>
+        <article className="panel">
+          <div className="panel-heading"><div><span className="section-kicker">ATIVIDADE</span><h3>Movimento recente</h3></div></div>
+          <div className="activity-list">
+            {leaderActivities.map((activity) => (
+              <div className="activity-row" key={activity.text}>
+                <span>+{activity.points}</span>
+                <div><strong>{activity.type}</strong><p>{activity.text}</p><small>{activity.time}</small></div>
+              </div>
+            ))}
+          </div>
+        </article>
+      </section>
+    </>
+  );
+}
+
+function NetworkView() {
+  return (
+    <article className="panel">
+      <div className="toolbar leader-toolbar">
+        <div className="search-box inline"><Search size={16} /><input placeholder="Buscar por nome, telefone ou bairro..." /></div>
+        <button className="primary-button"><UserPlus size={16} /> Cadastrar apoiador</button>
+      </div>
+      <div className="leader-stats-row">
+        <MetricCard icon={Users} label="Total de apoiadores" value={String(supporters.length)} note="rede inicial" />
+        <MetricCard icon={ClipboardList} label="Com observacoes" value="1" note="precisam retorno" tone="orange" />
+        <MetricCard icon={Megaphone} label="Com demandas" value="0" note="fila limpa" tone="slate" />
+      </div>
+      <div className="table-wrap">
+        <table>
+          <thead><tr><th>Eleitor</th><th>Contato</th><th>Bairro</th><th>Status</th><th>Pontos</th></tr></thead>
+          <tbody>
+            {supporters.map((supporter) => (
+              <tr key={supporter.phone}>
+                <td><strong>{supporter.name}</strong></td>
+                <td>{supporter.phone}</td>
+                <td>{supporter.neighborhood}</td>
+                <td><Pill tone={supporter.status === "Confirmado" ? "green" : "blue"}>{supporter.status}</Pill></td>
+                <td><span className="mono">{supporter.points}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </article>
+  );
+}
+
+function CheckinView() {
+  return (
+    <section className="leader-form-wrap">
+      <article className="panel leader-form">
+        <div className="form-title"><MapPin /><div><h3>Check-in Diario</h3><p>Registre suas atividades de lideranca.</p></div></div>
+        <label>Tipo de atividade</label>
+        <div className="activity-type-grid">
+          {[[Users, "Reuniao"], [Hand, "Visita"], [Megaphone, "Acao local"], [MessageCircleMore, "Outros"]].map(([Icon, label]) => {
+            const TypedIcon = Icon as typeof Gauge;
+            return <button className={label === "Visita" ? "active" : ""} key={String(label)}><TypedIcon size={22} />{String(label)}</button>;
+          })}
+        </div>
+        <label>Local</label>
+        <div className="input-line"><MapPin size={16} /><input placeholder="Onde voce esta? Ex: Bairro Centro, Associacao, feira" /></div>
+        <button className="text-button location-button">Usar minha localizacao atual</button>
+        <label>Descricao</label>
+        <textarea placeholder="Descreva brevemente o que foi feito..." />
+        <label>Fotos ou arquivos</label>
+        <div className="upload-box"><Upload size={28} /><strong>Clique ou arraste arquivos aqui</strong><span>Maximo 5MB por arquivo</span></div>
+        <button className="primary-button full">Confirmar check-in</button>
+      </article>
+    </section>
+  );
+}
+
+function GoalsView() {
+  return (
+    <section className="content-grid two-thirds">
+      <article className="panel">
+        <div className="panel-heading"><div><span className="section-kicker">GAMEFICACAO</span><h3>Missoes do lider</h3></div><Pill tone="orange">{leaderProfile.level}</Pill></div>
+        <div className="goal-list">
+          {leaderGoals.map((goal) => (
+            <div className="goal-row" key={goal.title}>
+              <div><strong>{goal.title}</strong><span>{goal.current} de {goal.target} · recompensa {goal.reward} pontos</span></div>
+              <div className="progress"><i style={{ width: `${goal.progress}%` }} /></div>
+              <b>{goal.progress}%</b>
+            </div>
+          ))}
+        </div>
+      </article>
+      <article className="panel score-card">
+        <Trophy size={30} />
+        <span className="section-kicker">PLACAR</span>
+        <h3>{leaderProfile.points} pontos</h3>
+        <p>Faltam 64 pontos para o nivel Mobilizador Ouro.</p>
+        <div className="progress"><i style={{ width: "74%" }} /></div>
+      </article>
+    </section>
+  );
+}
+
+function MuralView() {
+  return (
+    <section className="mural-grid">
+      {leaderAnnouncements.map((item) => (
+        <article className="panel announcement-card" key={item.title}>
+          <Pill tone={item.priority === "Alta" ? "orange" : "blue"}>{item.priority}</Pill>
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+        </article>
+      ))}
+      <article className="panel announcement-card quiet">
+        <Pill tone="green">Proximo</Pill>
+        <h3>Treinamento de lideres</h3>
+        <p>Modulo rapido para abordagem de apoiadores, prova documental e cadastro pelo link.</p>
+      </article>
+    </section>
+  );
+}
+
+function AccessView() {
+  return (
+    <section className="access-grid">
+      <article className="panel access-card">
+        <div className="form-title"><Lock /><div><h3>Login do lider</h3><p>Acesso demonstrativo pronto para integrar ao Supabase Auth.</p></div></div>
+        <label>E-mail</label>
+        <div className="input-line"><UserCircle size={16} /><input defaultValue={leaderProfile.loginHint} /></div>
+        <label>Senha</label>
+        <div className="input-line"><Lock size={16} /><input defaultValue={leaderProfile.passwordHint} type="password" /></div>
+        <button className="primary-button full">Entrar no painel</button>
+      </article>
+      <article className="panel access-card">
+        <div className="form-title"><UserPlus /><div><h3>Cadastro de novo apoiador</h3><p>Entrada vinculada automaticamente ao lider Joao Gabriel.</p></div></div>
+        <label>Nome completo</label>
+        <input className="plain-input" placeholder="Nome do eleitor" />
+        <label>Telefone</label>
+        <div className="input-line"><Phone size={16} /><input placeholder="(71) 99999-9999" /></div>
+        <label>Bairro</label>
+        <input className="plain-input" placeholder="Bairro" />
+        <button className="secondary-button full">Cadastrar na rede</button>
+      </article>
+    </section>
   );
 }
 
@@ -317,6 +539,12 @@ export function CampaignDashboard() {
   const [query, setQuery] = useState("");
   const [title, subtitle] = viewTitles[view];
   const viewContent = useMemo(() => {
+    if (view === "lideranca") return <LeaderOverviewView />;
+    if (view === "rede") return <NetworkView />;
+    if (view === "checkin") return <CheckinView />;
+    if (view === "metas") return <GoalsView />;
+    if (view === "mural") return <MuralView />;
+    if (view === "cadastro") return <AccessView />;
     if (view === "movimento") return <MovementView />;
     if (view === "conteudo") return <ContentView />;
     if (view === "territorio") return <TerritoryView />;
