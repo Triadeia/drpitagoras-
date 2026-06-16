@@ -3,16 +3,16 @@
 import Link from "next/link";
 import { ArrowUpRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
-import { assetDirectory, directoryItems } from "@/lib/brandbook";
+import { assetDirectory, directoryItems, movementDocumentDirectoryItems } from "@/lib/brandbook";
 
-const filters = ["Todos", "Fundamentos", "Narrativa", "Sistema"];
+const filters = ["Todos", "Movimento", "Fundamentos", "Narrativa", "Sistema"];
 
 export function BrandbookDirectory() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("Todos");
   const entries = useMemo(() => {
     const normalized = query.trim().toLocaleLowerCase("pt-BR");
-    return [...directoryItems, ...assetDirectory].filter((item) => {
+    return [...movementDocumentDirectoryItems, ...directoryItems, ...assetDirectory].filter((item) => {
       const matchesFilter = filter === "Todos" || item.group === filter;
       const haystack = `${item.name} ${item.description} ${item.category}`.toLocaleLowerCase("pt-BR");
       return matchesFilter && (!normalized || haystack.includes(normalized));

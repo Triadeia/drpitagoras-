@@ -15,6 +15,7 @@ import {
   Target,
   Type,
 } from "lucide-react";
+import { movementDocuments } from "@/lib/movement-documents";
 
 export type BrandSection = {
   slug: string;
@@ -327,6 +328,15 @@ export const directoryItems = brandSections.flatMap((section) => [
     href: `/app/marca/${section.slug}#${chapter.id}`,
   })),
 ]);
+
+export const movementDocumentDirectoryItems = movementDocuments.map((document) => ({
+  id: `movement-${document.id}`,
+  name: `${document.code} — ${document.title}`,
+  category: "Documento do Movimento",
+  group: "Movimento",
+  description: document.summary,
+  href: `/app/marca/documentos/${document.id}`,
+}));
 
 export const assetDirectory = [
   { id: "asset-logo-white", name: "Logo Dr. Pitagoras branco", category: "Asset", group: "Fundamentos", description: "Assinatura para fundos escuros e navegação.", href: "/logo_pitagoras_branco.png" },

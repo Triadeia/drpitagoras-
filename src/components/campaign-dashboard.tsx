@@ -44,7 +44,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import {
   contentItems,
   doctrines,
@@ -58,6 +58,7 @@ import {
   supporters,
   territories,
 } from "@/lib/campaign-data";
+import { movementDocuments, movementDocumentCategories, movementDocumentStatuses, movementDocumentTypes, type MovementDocument } from "@/lib/movement-documents";
 
 type View = "dashboard" | "lideranca" | "rede" | "checkin" | "metas" | "mural" | "cadastro" | "movimento" | "conteudo" | "territorio" | "provas" | "operacao" | "inteligencia";
 
@@ -382,42 +383,174 @@ function AccessView() {
 
 function MovementView() {
   return (
-    <section className="content-grid two-thirds">
-      <div className="stack">
-        <article className="panel manifesto">
-          <span className="section-kicker">GRANDE IDEAL</span>
-          <h2>A Bahia é de quem<br /><em>constrói o interior.</em></h2>
-          <p>Devolver ao baiano do interior a dignidade de ser representado por alguém que conhece sua realidade e já governou de verdade.</p>
-        </article>
-        <article className="panel">
-          <div className="panel-heading"><div><span className="section-kicker">SISTEMA</span><h3>Doutrinas centrais</h3></div><Pill>6 em destaque</Pill></div>
-          <div className="doctrine-grid">
-            {doctrines.map(([code, text]) => <div className="doctrine-card" key={code}><span>{code}</span><strong>{text}</strong></div>)}
-          </div>
-        </article>
+    <>
+      <section className="content-grid two-thirds">
+        <div className="stack">
+          <article className="panel manifesto">
+            <span className="section-kicker">GRANDE IDEAL</span>
+            <h2>Receita Certa<br /><em>de quem constrói.</em></h2>
+            <p>Devolver ao baiano do interior a dignidade de ser representado por alguém que conhece sua realidade, organiza comunidade e prova resultado antes de pedir confiança.</p>
+          </article>
+          <article className="panel">
+            <div className="panel-heading"><div><span className="section-kicker">SISTEMA</span><h3>Doutrinas centrais</h3></div><Pill>6 em destaque</Pill></div>
+            <div className="doctrine-grid">
+              {doctrines.map(([code, text]) => <Link href={`/app/marca/documentos/${code.toLowerCase()}`} className="doctrine-card" key={code}><span>{code}</span><strong>{text}</strong></Link>)}
+            </div>
+          </article>
+        </div>
+        <div className="stack">
+          <article className="panel">
+            <span className="section-kicker">ARQUÉTIPOS</span>
+            <h3>Identidade do líder</h3>
+            <div className="archetype-chart">
+              <div className="donut"><div><strong>45%</strong><span>Curador</span></div></div>
+              <ul>
+                <li><i className="blue-dot" /> Curador <strong>45%</strong></li>
+                <li><i className="orange-dot" /> Governante <strong>35%</strong></li>
+                <li><i className="slate-dot" /> Herói <strong>20%</strong></li>
+              </ul>
+            </div>
+          </article>
+          <article className="panel">
+            <span className="section-kicker">INIMIGO ABSTRATO</span>
+            <h3>A política sem resultado</h3>
+            <p className="body-muted">O sistema que usa o interior como voto, promete com elegância e desaparece antes da entrega.</p>
+            <div className="contrast-row"><X size={17} /><span>Promessa sem fonte</span></div>
+            <div className="contrast-row positive"><Check size={17} /><span>Resultado verificável</span></div>
+          </article>
+        </div>
+      </section>
+      <MovementDocumentsPanel />
+    </>
+  );
+}
+
+function MovementDocumentsPanel() {
+  const [query, setQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState("Todos");
+  const [statusFilter, setStatusFilter] = useState("Todos");
+  const [categoryFilter, setCategoryFilter] = useState("Todos");
+  const [uploads, setUploads] = useState<MovementDocument[]>(() => {
+    if (typeof window === "undefined") return [];
+    const saved = window.localStorage.getItem("drp-movement-documents");
+    return saved ? JSON.parse(saved) as MovementDocument[] : [];
+  });
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [notice, setNotice] = useState("Documentos-base carregados. Upload pronto para Drive quando as credenciais estiverem configuradas.");
+
+  const allDocuments = useMemo(() => [...movementDocuments, ...uploads], [uploads]);
+  const filteredDocuments = useMemo(() => {
+    const normalized = query.trim().toLocaleLowerCase("pt-BR");
+    return allDocuments.filter((document) => {
+      const haystack = `${document.code} ${document.title} ${document.summary} ${document.territory} ${document.tags.join(" ")}`.toLocaleLowerCase("pt-BR");
+      return (!normalized || haystack.includes(normalized))
+        && (typeFilter === "Todos" || document.type === typeFilter)
+        && (statusFilter === "Todos" || document.status === statusFilter)
+        && (categoryFilter === "Todos" || document.category === categoryFilter);
+    });
+  }, [allDocuments, categoryFilter, query, statusFilter, typeFilter]);
+
+  async function handleUpload(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsSending(true);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch("/api/movement/documents", { method: "POST", body: formData });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error ?? "Falha ao enviar documento.");
+
+      const nextDocument = payload.document as MovementDocument;
+      const nextUploads = [...uploads, nextDocument];
+      setUploads(nextUploads);
+      window.localStorage.setItem("drp-movement-documents", JSON.stringify(nextUploads));
+      setNotice(payload.driveConfigured ? "Documento enviado ao Google Drive e salvo no painel." : "Drive ainda sem credenciais na Vercel. Documento salvo localmente como fallback.");
+      form.reset();
+      setIsOpen(false);
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Nao foi possivel enviar o documento.");
+    } finally {
+      setIsSending(false);
+    }
+  }
+
+  return (
+    <article className="panel movement-documents-panel">
+      <div className="panel-heading">
+        <div>
+          <span className="section-kicker">DOCUMENTOS DO MOVIMENTO</span>
+          <h3>Receita Certa de quem constrói</h3>
+          <p className="body-muted">Cada arquivo carrega metadados, território, fonte, status de validação e link de prova.</p>
+        </div>
+        <div className="document-actions">
+          <Link className="secondary-button" href="/app/marca/diretorio"><BookOpenCheck size={16} /> Diretório público</Link>
+          <button className="primary-button" onClick={() => setIsOpen(true)} type="button"><Upload size={16} /> Adicionar documento</button>
+        </div>
       </div>
-      <div className="stack">
-        <article className="panel">
-          <span className="section-kicker">ARQUÉTIPOS</span>
-          <h3>Identidade do líder</h3>
-          <div className="archetype-chart">
-            <div className="donut"><div><strong>45%</strong><span>Curador</span></div></div>
-            <ul>
-              <li><i className="blue-dot" /> Curador <strong>45%</strong></li>
-              <li><i className="orange-dot" /> Governante <strong>35%</strong></li>
-              <li><i className="slate-dot" /> Herói <strong>20%</strong></li>
-            </ul>
-          </div>
-        </article>
-        <article className="panel">
-          <span className="section-kicker">INIMIGO ABSTRATO</span>
-          <h3>A política sem resultado</h3>
-          <p className="body-muted">O sistema que usa o interior como voto, promete com elegância e desaparece antes da entrega.</p>
-          <div className="contrast-row"><X size={17} /><span>Promessa sem fonte</span></div>
-          <div className="contrast-row positive"><Check size={17} /><span>Resultado verificável</span></div>
-        </article>
+
+      <div className="proof-banner compact"><ShieldCheck size={19} /><div><strong>{notice}</strong><span>Credenciais esperadas: GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_PRIVATE_KEY e GOOGLE_DRIVE_FOLDER_ID.</span></div></div>
+
+      <div className="document-filters">
+        <div className="search-box inline"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar por titulo, tag, territorio ou fonte..." /></div>
+        <select value={typeFilter} onChange={(event) => setTypeFilter(event.target.value)}>
+          {["Todos", ...movementDocumentTypes].map((item) => <option key={item}>{item}</option>)}
+        </select>
+        <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
+          {["Todos", ...movementDocumentCategories].map((item) => <option key={item}>{item}</option>)}
+        </select>
+        <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
+          {["Todos", ...movementDocumentStatuses].map((item) => <option key={item}>{item}</option>)}
+        </select>
       </div>
-    </section>
+
+      {filteredDocuments.length ? (
+        <div className="movement-document-list">
+          {filteredDocuments.map((document) => (
+            <div className="movement-document-row" key={`${document.id}-${document.fileName}`}>
+              <div className="document-code"><FileText size={17} /><span>{document.code}</span></div>
+              <div className="document-main">
+                <Link href={document.id.startsWith("doc-") ? `/app/marca/documentos/${document.id}` : document.driveUrl ?? "#"}>{document.title}</Link>
+                <p>{document.summary}</p>
+                <div>{document.tags.slice(0, 4).map((tag) => <span key={tag}>{tag}</span>)}</div>
+              </div>
+              <div className="document-meta">
+                <strong>{document.territory}</strong>
+                <Pill tone={document.status === "Publicado" ? "green" : document.status === "Em revisao" ? "orange" : "red"}>{document.status}</Pill>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="empty-state"><FileText size={34} /><strong>Nenhum documento encontrado</strong><p>Ajuste os filtros ou adicione um novo arquivo do movimento.</p></div>
+      )}
+
+      {isOpen ? (
+        <div className="modal-layer" role="dialog" aria-modal="true">
+          <form className="document-modal" onSubmit={handleUpload}>
+            <div className="panel-heading compact"><div><span className="section-kicker">NOVO DOCUMENTO</span><h3>Adicionar ao movimento</h3></div><button type="button" onClick={() => setIsOpen(false)}><X size={18} /></button></div>
+            <label>Titulo *</label>
+            <input name="title" className="plain-input" required placeholder="Ex.: Ata de reunião territorial" />
+            <div className="form-grid">
+              <div><label>Tipo *</label><input name="type" className="plain-input" required placeholder="Relatório, prova, ata..." /></div>
+              <div><label>Categoria estratégica</label><input name="category" className="plain-input" placeholder="Evidência, comunidade..." /></div>
+            </div>
+            <div className="form-grid">
+              <div><label>Território</label><input name="territory" className="plain-input" placeholder="Candeias, Recôncavo..." /></div>
+              <div><label>Fonte</label><input name="source" className="plain-input" placeholder="Responsável ou origem" /></div>
+            </div>
+            <label>Resumo</label>
+            <textarea name="summary" className="plain-input" placeholder="O que este documento comprova ou organiza?" />
+            <label>Tags</label>
+            <input name="tags" className="plain-input" placeholder="saude, prova, candeias" />
+            <label>Arquivo *</label>
+            <input name="file" className="plain-input" type="file" required />
+            <button className="primary-button full" disabled={isSending}>{isSending ? "Enviando..." : "Enviar documento"}</button>
+          </form>
+        </div>
+      ) : null}
+    </article>
   );
 }
 
