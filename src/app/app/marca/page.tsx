@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BookOpenText, Component, ShieldCheck } from "lucide-react";
 import { brandSections } from "@/lib/brandbook";
+import { movementDocuments } from "@/lib/movement-documents";
 
 export default function BrandbookHome() {
   return (
@@ -42,8 +43,30 @@ export default function BrandbookHome() {
       <section className="brandbook-section-list">
         <div className="brandbook-section-heading">
           <div>
+            <span className="brand-kicker">Documentos do movimento</span>
+            <h2>DOC-001 a DOC-008 com narrativa, evidência, arquétipos e aplicações táticas.</h2>
+          </div>
+          <Link href="/app/marca/diretorio">Abrir diretório</Link>
+        </div>
+        <div className="brandbook-card-grid">
+          {movementDocuments.map((document) => (
+            <Link key={document.id} href={`/app/marca/documentos/${document.id}`} className="brandbook-card">
+              <div>
+                <span>{document.code} / Movimento</span>
+                <BookOpenText size={19} />
+              </div>
+              <h3>{document.title}</h3>
+              <p>{document.summary}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="brandbook-section-list">
+        <div className="brandbook-section-heading">
+          <div>
             <span className="brand-kicker">15 pilares estruturados</span>
-            <h2>Tokens, componentes, voz, narrativa e substância política.</h2>
+            <h2>Tokens, componentes, voz, narrativa e substância política em páginas completas.</h2>
           </div>
           <Link href="/app/marca/diretorio">Ver todos</Link>
         </div>
