@@ -8,16 +8,20 @@
 
 ---
 
-## Sumário dos 6 Documentos
+## Sumário dos 10 Documentos Centrais
 
-| Doutrina | Nível | Storyteller(s) | Framework | Função Principal |
-|---|---|---|---|---|
-| [DOC-001](./DOC-001-de-uma-nova-candeias-para-uma-nova-bahia.md) | Identidade Central | @joseph-campbell + @donald-miller | Hero's Journey + BrandScript | Frame mestre do movimento |
-| [DOC-002](./DOC-002-a-bahia-e-de-quem-constroi-o-interior.md) | Grande Ideal | @marshall-ganz + @kindra-hall | Public Narrative + 4 Stories | Reposicionar o interior como protagonista |
-| [DOC-003](./DOC-003-a-receita-certa-nao-e-promessa-e-metodo.md) | Diferenciação | @nancy-duarte + @shawn-coyne | Sparkline + Story Grid | Substituir promessa por método |
-| [DOC-006](./DOC-006-resultado-e-a-unica-ideologia-que-importa.md) | Posicionamento Centro | @park-howell + @blake-snyder | ABT + Save the Cat | Neutralizar polarização |
-| [DOC-007](./DOC-007-saude-nao-e-de-esquerda-nem-de-direita-e-de-medico.md) | Neutralização Ideológica | @matthew-dicks | Personal Story / 5-second moment | Despolitizar saúde |
-| [DOC-008](./DOC-008-8-anos-84-porcento-candeias-mudou.md) | Prova de Resultado | @oren-klaff | STRONG / Pitch | Transformar dado em testemunho |
+| Doutrina | Nível | Framework | Função Principal |
+|---|---|---|---|
+| [DOC-001](./DOC-001-de-uma-nova-candeias-para-uma-nova-bahia.md) | Identidade Central | Hero's Journey + BrandScript | Frame mestre do movimento |
+| [DOC-002](./DOC-002-a-bahia-e-de-quem-constroi-o-interior.md) | Grande Ideal | Public Narrative + 4 Stories | Reposicionar o interior como protagonista |
+| [DOC-003](./DOC-003-a-receita-certa-nao-e-promessa-e-metodo.md) | Diferenciação | Sparkline + Story Grid | Substituir promessa por método |
+| [DOC-004](./DOC-004-quem-cuidou-de-uma-cidade-pode-cuidar-de-um-estado.md) | Elevação de Causa | Hero's Journey (ascensão) + Scale Theory | Transferência comprovada de competência |
+| [DOC-005](./DOC-005-o-interior-nao-pede-esmola-pede-representacao-real.md) | Convocação | Public Narrative + Reposicionamento | Dignidade + capacidade reconhecida |
+| [DOC-006](./DOC-006-resultado-e-a-unica-ideologia-que-importa.md) | Posicionamento Centro | ABT + Save the Cat | Neutralizar polarização |
+| [DOC-007](./DOC-007-saude-nao-e-de-esquerda-nem-de-direita-e-de-medico.md) | Neutralização Ideológica | Personal Story / 5-second moment | Despolitizar saúde |
+| [DOC-008](./DOC-008-8-anos-84-porcento-candeias-mudou.md) | Prova de Resultado | STRONG / Pitch | Transformar dado em testemunho |
+| [DOC-009](./DOC-009-o-voto-certo-e-o-voto-que-tem-receita-por-tras.md) | Ação Eleitoral | STRONG Pitch + Decision Science | Critério de voto fundado em método |
+| [DOC-010](./DOC-010-um-estado-que-cuida-comeca-por-deputados-que-ja-sabem-cuidar.md) | Pertencimento | Hero Returns + System Thinking | Sistema integrado de competências |
 
 ---
 
