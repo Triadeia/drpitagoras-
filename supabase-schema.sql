@@ -106,7 +106,7 @@ create policy "public demo read announcements" on public.leader_announcements fo
 create policy "public demo write announcements" on public.leader_announcements for insert with check (true);
 
 insert into public.leaders (name, role, email, phone, city, neighborhood, invite_url, points, level)
-values ('Joao Gabriel', 'Lider da Campanha', 'lider@drpitagoras.com.br', '(71) 99246-4840', 'Candeias', 'Nova Candeias', 'https://dr-pitagoras.vercel.app/cadastro/joao-gabriel', 186, 'Mobilizador Prata')
+values ('Joao Gabriel', 'Lider da Campanha', 'lider@drpitagoras.com.br', '(71) 99723-8027', 'Candeias', 'Nova Candeias', 'https://dr-pitagoras.vercel.app/cadastro/joao-gabriel', 186, 'Mobilizador Prata')
 on conflict (email) do update set points = excluded.points, level = excluded.level;
 
 with leader as (select id from public.leaders where email = 'lider@drpitagoras.com.br' limit 1)

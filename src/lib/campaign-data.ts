@@ -52,7 +52,7 @@ export const leaderProfile = {
   name: "Joao Gabriel",
   role: "Lider da Campanha",
   email: "lider@drpitagoras.com.br",
-  phone: "(71) 99246-4840",
+  phone: "(71) 99723-8027",
   city: "Candeias",
   neighborhood: "Nova Candeias",
   inviteUrl: "https://dr-pitagoras.vercel.app/cadastro/joao-gabriel",
