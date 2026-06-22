@@ -114,7 +114,7 @@ export default function ObrasLandingPage() {
         </div>
         <div className="gallery">
           {photos.map((photo, index) => (
-            <figure className="galleryCard reveal" key={`${photo.id}-grid`} style={{ "--i": index } as React.CSSProperties}>
+            <figure className="galleryCard reveal" key={`${photo.id}-grid`} style={{ animationDelay: `${index * 35}ms` }}>
               <img src={driveImage(photo.id, 1200)} alt={photo.title} loading="lazy" />
               <figcaption>{photo.title}</figcaption>
             </figure>
