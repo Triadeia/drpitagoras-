@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useMemo, useState } from "react";
 
 const WHATSAPP = "5571997238027";
@@ -51,7 +52,7 @@ export default function ObrasLandingPage() {
       <section className="hero">
         <div className="heroGlow" />
         <nav className="topNav">
-          <a href="/" className="brand">Dr. Pitagoras</a>
+          <Link href="/" className="brand">Dr. Pitagoras</Link>
           <a href={whatsappUrl} target="_blank" rel="noreferrer" className="navButton">Falar no WhatsApp</a>
         </nav>
 

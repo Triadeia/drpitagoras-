@@ -4,7 +4,7 @@ import { FormEvent, useMemo, useState } from "react";
 import { CheckCircle2, Loader2, MessageCircle, ShieldCheck, UserRound } from "lucide-react";
 
 const whatsappNumber = "5571997238027";
-const baseMessage = "Vim do site";
+const directMessage = "Quero entrar no movimento Receita Certa como apoiador ou lideranca.";
 
 type FormState = "idle" | "loading" | "success" | "error";
 
@@ -19,11 +19,22 @@ export function MovementSignupForm() {
   const [phone, setPhone] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
   const [city, setCity] = useState("Candeias");
+  const [profile, setProfile] = useState("Apoiador do movimento");
   const [consent, setConsent] = useState(true);
 
   const whatsappHref = useMemo(() => {
-    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(baseMessage)}`;
-  }, []);
+    const message = [
+      "Ola, equipe do Dr. Pitagoras.",
+      "Vim pela home do site e quero entrar no movimento Receita Certa.",
+      name.trim() ? `Nome: ${name.trim()}` : "",
+      phone.trim() ? `WhatsApp: ${phone.trim()}` : "",
+      city.trim() ? `Cidade: ${city.trim()}` : "",
+      neighborhood.trim() ? `Bairro: ${neighborhood.trim()}` : "",
+      `Perfil: ${profile}`,
+    ].filter(Boolean).join("\n");
+
+    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message || directMessage)}`;
+  }, [city, name, neighborhood, phone, profile]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -46,9 +57,9 @@ export function MovementSignupForm() {
           phone,
           neighborhood: neighborhood || "Nao informado",
           city: city || "Candeias",
-          status: "Assinou pela LP antes/depois",
-          points: 15,
-          tags: ["LP", "AntesDepois", "WhatsApp", "Opt-in"],
+          status: `Home LP - ${profile}`,
+          points: profile.includes("Lideranca") ? 25 : 15,
+          tags: ["Home", "ReceitaCerta", "WhatsApp", "Opt-in", profile],
         }),
       });
 
@@ -68,7 +79,7 @@ export function MovementSignupForm() {
         <div className="capture-form-icon"><UserRound size={22} /></div>
         <div>
           <span>Assinar o movimento</span>
-          <h2>Receba as provas, agendas e proximas acoes no WhatsApp.</h2>
+          <h2>Entre como apoiador, parceiro ou lideranca da Receita Certa.</h2>
         </div>
       </div>
 
@@ -116,6 +127,19 @@ export function MovementSignupForm() {
         </div>
       </div>
 
+      <label htmlFor="capture-profile">Como voce quer participar?</label>
+      <select
+        id="capture-profile"
+        value={profile}
+        onChange={(event) => setProfile(event.target.value)}
+      >
+        <option>Apoiador do movimento</option>
+        <option>Lideranca comunitaria</option>
+        <option>Parceiro politico</option>
+        <option>Voluntario de campo</option>
+        <option>Quero indicar uma demanda da minha comunidade</option>
+      </select>
+
       <label className="capture-consent" htmlFor="capture-consent">
         <input
           id="capture-consent"
@@ -134,7 +158,7 @@ export function MovementSignupForm() {
 
       <button className="capture-submit" type="submit" disabled={state === "loading"}>
         {state === "loading" ? <Loader2 className="capture-spin" size={18} /> : <MessageCircle size={18} />}
-        Entrar no WhatsApp do movimento
+        Enviar e abrir WhatsApp
       </button>
 
       <a className="capture-whatsapp-link" href={whatsappHref}>
