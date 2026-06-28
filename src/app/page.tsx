@@ -60,6 +60,8 @@ export default function Home() {
             <Image src="/logo_pitagoras_branco.png" alt="Dr. Pitagoras" width={224} height={38} priority unoptimized />
           </Link>
           <div className="home-nav-actions">
+            <Link href="/app">App</Link>
+            <Link href="/painel">Painel</Link>
             <Link href="/obras">Ver obras</Link>
             <a href={whatsappHref}>
               <MessageCircle size={17} />
